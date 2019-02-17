@@ -7,7 +7,7 @@ ENV ANT_HOME=/opt/ant
 
 RUN apt-get update && apt-get upgrade -y
 
-RUN apt-get install -y software-properties-common
+RUN apt-get install -y software-properties-common git
 
 RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
     add-apt-repository -y ppa:webupd8team/java && \
