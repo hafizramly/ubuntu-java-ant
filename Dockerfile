@@ -2,20 +2,24 @@ FROM ubuntu:16.04
 
 MAINTAINER Mohd Hafiz Ramly <mohd_hafiz.ramly@bbraun.com>
 
+# Setup your proxy if required
+#ENV HTTP_PROXY="http://165.225.112.16:10127"
+#ENV HTTPS_POXY="http://165.225.112.16:10127"
+
+# Define your required Apache Ant version here
 ENV ANT_VERSION=1.10.3
 ENV ANT_HOME=/opt/ant
 
+# Run package update
 RUN apt-get update && apt-get upgrade -y
 
-RUN apt-get install -y software-properties-common git
+# Install core apps and Java JDK
+RUN apt-get install -y software-properties-common git openjdk-8-jdk
 
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get install -y oracle-java8-installer
-
+# Setting up OpenJDK environment
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
+# Install and setup Apache Ant
 RUN wget --no-check-certificate --no-cookies http://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz \
     && wget --no-check-certificate --no-cookies http://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz.sha512 \
     && echo "$(cat apache-ant-${ANT_VERSION}-bin.tar.gz.sha512) apache-ant-${ANT_VERSION}-bin.tar.gz" | sha512sum -c \
@@ -29,4 +33,5 @@ RUN update-alternatives --install "/usr/bin/ant" "ant" "/opt/ant/bin/ant" 1 && \
 
 ENV ANT_HOME /opt/ant
 
+# Cleaning up
 RUN apt-get autoremove && apt-get autoclean
