@@ -14,7 +14,11 @@ ENV ANT_HOME=/opt/ant
 RUN apt-get update && apt-get upgrade -y
 
 # Install core apps and Java JDK
-RUN apt-get install -y software-properties-common git openjdk-8-jdk
+RUN apt-get install -y software-properties-common wget git openjdk-8-jdk
+
+# make /bin/sh symlink to bash instead of dash:
+RUN echo "dash dash/sh boolean false" | debconf-set-selections
+RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 # Setting up OpenJDK environment
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
